@@ -6,7 +6,9 @@ import (
 	"log"
 	"strings"
 
+	"github.com/gobwas/glob"
 	"github.com/hashicorp/terraform/command/clistate"
+	"github.com/hashicorp/terraform/terraform"
 )
 
 // UntaintCommand is a cli.Command implementation that manually untaints
@@ -121,9 +123,23 @@ func (c *UntaintCommand) Run(args []string) int {
 		return 1
 	}
 
-	// Get the resource we're looking for
-	rs, ok := mod.Resources[name]
-	if !ok {
+	g, err := glob.Compile(name)
+	if err != nil {
+		c.Ui.Error(fmt.Sprintf(
+			"The glob %s is not correct.",
+			name))
+	}
+
+	// Get the resources we're looking for
+	resources := make(map[string]*terraform.ResourceState)
+	if err == nil {
+		for key, rs := range mod.Resources {
+			if g.Match(key) {
+				resources[key] = rs
+			}
+		}
+	}
+	if len(resources) == 0 {
 		if allowMissing {
 			return c.allowMissingExit(name, module)
 		}
@@ -135,8 +151,13 @@ func (c *UntaintCommand) Run(args []string) int {
 		return 1
 	}
 
-	// Untaint the resource
-	rs.Untaint()
+	for target, rs := range resources {
+		// Untaint the resource
+		rs.Untaint()
+		c.Ui.Output(fmt.Sprintf(
+			"The resource %s in the module %s has been successfully untainted!",
+			target, module))
+	}
 
 	log.Printf("[INFO] Writing state output to: %s", c.Meta.StateOutPath())
 	if err := st.WriteState(s); err != nil {
@@ -148,9 +169,6 @@ func (c *UntaintCommand) Run(args []string) int {
 		return 1
 	}
 
-	c.Ui.Output(fmt.Sprintf(
-		"The resource %s in the module %s has been successfully untainted!",
-		name, module))
 	return 0
 }
 
