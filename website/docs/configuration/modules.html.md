@@ -422,7 +422,7 @@ in the _current_ module.
 
 Once the `providers` argument is used in a `module` block, it overrides all of
 the default inheritance behavior, so it is necessary to enumerate mappings
-for _all_ of the required providers. This is to avoid confusion and surprises
+for _all_ of the required providers other than default. This is to avoid confusion and surprises
 that may result when mixing both implicit and explicit provider passing.
 
 Additional provider configurations (those with the `alias` argument set) are
