@@ -862,6 +862,13 @@ func TestFunctions(t *testing.T) {
 			},
 		},
 
+		"template": {
+			{
+				`template("Hello, $${name}!", {name = "Jodie"})`,
+				cty.StringVal("Hello, Jodie!"),
+			},
+		},
+
 		"templatefile": {
 			{
 				`templatefile("hello.tmpl", {name = "Jodie"})`,
