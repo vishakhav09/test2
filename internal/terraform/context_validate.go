@@ -10,6 +10,29 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
+// ValidateOpts are the various options that affect the details of how Terraform
+// will validate a configuration.
+type ValidateOpts struct {
+	// Hints, if set to true, enables additional diagnostics that describe
+	// ways to possibly improve a Terraform configuration even though the
+	// current configuration is valid as written.
+	//
+	// The additional messages produced in "hint mode" are more subjective and
+	// so module authors can evaluate each one and choose to ignore suggestions
+	// that don't apply in some particular situations. There might be additional
+	// hints in later releases, thus making a previously-hint-free configuration
+	// potentially hint-y again, and so considering hint messages should
+	// typically be a development task in its own right, rather than a blocker
+	// for completing other development tasks.
+	Hints bool
+}
+
+// DefaultValidateOpts is a reasonable default set of validate options to use
+// in common cases without any special needs.
+var DefaultValidateOpts = &ValidateOpts{
+	Hints: false,
+}
+
 // Validate performs semantic validation of a configuration, and returns
 // any warnings or errors.
 //
@@ -21,7 +44,10 @@ import (
 // such as root module input variables. However, the Plan function includes
 // all of the same checks as Validate, in addition to the other work it does
 // to consider the previous run state and the planning options.
-func (c *Context) Validate(config *configs.Config) tfdiags.Diagnostics {
+//
+// Don't modify anything reachable through the arguments after calling this
+// function.
+func (c *Context) Validate(config *configs.Config, opts *ValidateOpts) tfdiags.Diagnostics {
 	defer c.acquireRun("validate")()
 
 	var diags tfdiags.Diagnostics
@@ -37,12 +63,12 @@ func (c *Context) Validate(config *configs.Config) tfdiags.Diagnostics {
 
 	log.Printf("[DEBUG] Building and walking validate graph")
 
-	graph, moreDiags := ValidateGraphBuilder(&PlanGraphBuilder{
+	graph, moreDiags := validateGraphBuilder(&PlanGraphBuilder{
 		Config:   config,
 		Plugins:  c.plugins,
 		Validate: true,
 		State:    states.NewState(),
-	}).Build(addrs.RootModuleInstance)
+	}, opts).Build(addrs.RootModuleInstance)
 	diags = diags.Append(moreDiags)
 	if moreDiags.HasErrors() {
 		return diags

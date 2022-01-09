@@ -4,13 +4,17 @@ import (
 	"github.com/hashicorp/terraform/internal/dag"
 )
 
-// ValidateGraphBuilder creates the graph for the validate operation.
+// validateGraphBuilder creates the graph for the validate operation.
 //
-// ValidateGraphBuilder is based on the PlanGraphBuilder. We do this so that
+// validateGraphBuilder is based on the PlanGraphBuilder. We do this so that
 // we only have to validate what we'd normally plan anyways. The
 // PlanGraphBuilder given will be modified so it shouldn't be used for anything
 // else after calling this function.
-func ValidateGraphBuilder(p *PlanGraphBuilder) GraphBuilder {
+func validateGraphBuilder(p *PlanGraphBuilder, opts *ValidateOpts) GraphBuilder {
+	if opts == nil {
+		opts = DefaultValidateOpts
+	}
+
 	// We're going to customize the concrete functions
 	p.CustomConcrete = true
 
@@ -24,6 +28,7 @@ func ValidateGraphBuilder(p *PlanGraphBuilder) GraphBuilder {
 	p.ConcreteResource = func(a *NodeAbstractResource) dag.Vertex {
 		return &NodeValidatableResource{
 			NodeAbstractResource: a,
+			Hints:                opts.Hints,
 		}
 	}
 
