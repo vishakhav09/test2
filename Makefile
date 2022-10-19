@@ -38,6 +38,10 @@ fmtcheck:
 importscheck:
 	"$(CURDIR)/scripts/goimportscheck.sh"
 
+vetcheck:
+	@echo "==> Checking that the code complies with go vet requirements"
+	@go vet ./...
+
 staticcheck:
 	"$(CURDIR)/scripts/staticcheck.sh"
 
@@ -66,4 +70,4 @@ website/build-local:
 # under parallel conditions.
 .NOTPARALLEL:
 
-.PHONY: fmtcheck importscheck generate protobuf website website-test staticcheck website/local website/build-local
+.PHONY: fmtcheck importscheck vetcheck generate protobuf website website-test staticcheck website/local website/build-local
