@@ -23,7 +23,7 @@ func TestNodeApplyableOutputExecute_knownValue(t *testing.T) {
 	ctx.RefreshStateState = states.NewState().SyncWrapper()
 	ctx.ChecksState = checks.NewState(nil)
 
-	config := &configs.Output{Name: "map-output"}
+	config := &configs.Output{Name: "map-output", ConstraintType: cty.DynamicPseudoType}
 	addr := addrs.OutputValue{Name: config.Name}.Absolute(addrs.RootModuleInstance)
 	node := &NodeApplyableOutput{Config: config, Addr: addr}
 	val := cty.MapVal(map[string]cty.Value{
@@ -53,7 +53,7 @@ func TestNodeApplyableOutputExecute_knownValue(t *testing.T) {
 func TestNodeApplyableOutputExecute_noState(t *testing.T) {
 	ctx := new(MockEvalContext)
 
-	config := &configs.Output{Name: "map-output"}
+	config := &configs.Output{Name: "map-output", ConstraintType: cty.DynamicPseudoType}
 	addr := addrs.OutputValue{Name: config.Name}.Absolute(addrs.RootModuleInstance)
 	node := &NodeApplyableOutput{Config: config, Addr: addr}
 	val := cty.MapVal(map[string]cty.Value{
@@ -81,6 +81,7 @@ func TestNodeApplyableOutputExecute_invalidDependsOn(t *testing.T) {
 				hcl.TraverseAttr{Name: "bar"},
 			},
 		},
+		ConstraintType: cty.DynamicPseudoType,
 	}
 	addr := addrs.OutputValue{Name: config.Name}.Absolute(addrs.RootModuleInstance)
 	node := &NodeApplyableOutput{Config: config, Addr: addr}
@@ -103,7 +104,7 @@ func TestNodeApplyableOutputExecute_sensitiveValueNotOutput(t *testing.T) {
 	ctx.StateState = states.NewState().SyncWrapper()
 	ctx.ChecksState = checks.NewState(nil)
 
-	config := &configs.Output{Name: "map-output"}
+	config := &configs.Output{Name: "map-output", ConstraintType: cty.DynamicPseudoType}
 	addr := addrs.OutputValue{Name: config.Name}.Absolute(addrs.RootModuleInstance)
 	node := &NodeApplyableOutput{Config: config, Addr: addr}
 	val := cty.MapVal(map[string]cty.Value{
@@ -126,8 +127,9 @@ func TestNodeApplyableOutputExecute_sensitiveValueAndOutput(t *testing.T) {
 	ctx.ChecksState = checks.NewState(nil)
 
 	config := &configs.Output{
-		Name:      "map-output",
-		Sensitive: true,
+		Name:           "map-output",
+		Sensitive:      true,
+		ConstraintType: cty.DynamicPseudoType,
 	}
 	addr := addrs.OutputValue{Name: config.Name}.Absolute(addrs.RootModuleInstance)
 	node := &NodeApplyableOutput{Config: config, Addr: addr}
