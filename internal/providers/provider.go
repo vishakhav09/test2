@@ -14,7 +14,7 @@ import (
 // Interface represents the set of methods required for a complete resource
 // provider plugin.
 type Interface interface {
-	// GetSchema returns the complete schema for the provider.
+	// GetProviderSchema returns the complete schema for the provider.
 	GetProviderSchema() GetProviderSchemaResponse
 
 	// ValidateProviderConfig allows the provider to validate the configuration.
