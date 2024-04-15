@@ -153,8 +153,8 @@ output "c" {
 					// have any action at this stage.
 				},
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.b[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
-					"test.c":        providers.DeferredReasonDeferredPrereq,
+					"test.b[*]": providers.DeferredReasonInstanceCountUnknown,
+					"test.c":    providers.DeferredReasonDeferredPrereq,
 				},
 				wantApplied: map[string]cty.Value{
 					"a": cty.ObjectVal(map[string]cty.Value{
@@ -434,8 +434,8 @@ resource "test" "c" {
 					"test.a": plans.Create,
 				},
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.b[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
-					"test.c":        providers.DeferredReasonDeferredPrereq,
+					"test.b[*]": providers.DeferredReasonInstanceCountUnknown,
+					"test.c":    providers.DeferredReasonDeferredPrereq,
 				},
 				wantApplied: map[string]cty.Value{
 					"a": cty.ObjectVal(map[string]cty.Value{
@@ -551,8 +551,8 @@ output "names" {
 				},
 				wantActions: map[string]plans.Action{},
 				wantDeferred: map[string]providers.DeferredReason{
-					"module.mod.test.names[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
-					"test.a":                       providers.DeferredReasonDeferredPrereq,
+					"module.mod.test.names[*]": providers.DeferredReasonInstanceCountUnknown,
+					"test.a":                   providers.DeferredReasonDeferredPrereq,
 				},
 				wantApplied: make(map[string]cty.Value),
 				wantOutputs: make(map[string]cty.Value),
@@ -693,7 +693,7 @@ resource "test" "c" {
 					"test.b": plans.DeleteThenCreate,
 				},
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.c[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
+					"test.c[*]": providers.DeferredReasonInstanceCountUnknown,
 				},
 			},
 		},
@@ -792,7 +792,7 @@ import {
 				},
 				wantActions: make(map[string]plans.Action),
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.a[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
+					"test.a[*]": providers.DeferredReasonInstanceCountUnknown,
 				},
 				wantApplied: make(map[string]cty.Value),
 				wantOutputs: make(map[string]cty.Value),
@@ -868,7 +868,7 @@ resource "test" "c" {
 					"test.b": plans.Create,
 				},
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.a[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
+					"test.a[*]": providers.DeferredReasonInstanceCountUnknown,
 				},
 				allowWarnings: true,
 			},
@@ -901,7 +901,7 @@ resource "test" "c" {
 					"test.b": plans.Create,
 				},
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.a[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
+					"test.a[*]": providers.DeferredReasonInstanceCountUnknown,
 				},
 				allowWarnings: true,
 			},
@@ -1272,7 +1272,7 @@ resource "test" "c" {
 					"test.c": plans.NoOp,
 				},
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.a[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
+					"test.a[*]": providers.DeferredReasonInstanceCountUnknown,
 				},
 			},
 		},
@@ -1333,7 +1333,7 @@ resource "test" "b" {
 					"test.b": plans.Create,
 				},
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.a[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
+					"test.a[*]": providers.DeferredReasonInstanceCountUnknown,
 				},
 				wantApplied: map[string]cty.Value{
 					"b": cty.ObjectVal(map[string]cty.Value{
@@ -1457,7 +1457,7 @@ resource "test" "c" {
 					"test.b": plans.Create,
 				},
 				wantDeferred: map[string]providers.DeferredReason{
-					"test.c[\"*\"]": providers.DeferredReasonInstanceCountUnknown,
+					"test.c[*]": providers.DeferredReasonInstanceCountUnknown,
 				},
 				wantApplied: map[string]cty.Value{
 					"b": cty.ObjectVal(map[string]cty.Value{
