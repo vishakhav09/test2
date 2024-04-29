@@ -166,7 +166,7 @@ func (p *Provider) ImportResourceState(req providers.ImportResourceStateRequest)
 		return importDataStore(req)
 	}
 
-	panic("unimplemented - terraform_remote_state has no resources")
+	panic("unimplemented - terraform.io/builtin/terraform has no managed resource types")
 }
 
 func (p *Provider) MoveResourceState(providers.MoveResourceStateRequest) providers.MoveResourceStateResponse {
@@ -178,6 +178,21 @@ func (p *Provider) MoveResourceState(providers.MoveResourceStateRequest) provide
 // ValidateResourceConfig is used to to validate the resource configuration values.
 func (p *Provider) ValidateResourceConfig(req providers.ValidateResourceConfigRequest) providers.ValidateResourceConfigResponse {
 	return validateDataStoreResourceConfig(req)
+}
+
+// CloseEphemeral implements providers.Interface.
+func (p *Provider) CloseEphemeral(providers.CloseEphemeralRequest) providers.CloseEphemeralResponse {
+	panic("unimplemented - terraform.io/builtin/terraform has no ephemeral resource types")
+}
+
+// OpenEphemeral implements providers.Interface.
+func (p *Provider) OpenEphemeral(providers.OpenEphemeralRequest) providers.OpenEphemeralResponse {
+	panic("unimplemented - terraform.io/builtin/terraform has no ephemeral resource types")
+}
+
+// RenewEphemeral implements providers.Interface.
+func (p *Provider) RenewEphemeral(providers.RenewEphemeralRequest) providers.RenewEphemeralResponse {
+	panic("unimplemented - terraform.io/builtin/terraform has no ephemeral resource types")
 }
 
 // CallFunction would call a function contributed by this provider, but this
