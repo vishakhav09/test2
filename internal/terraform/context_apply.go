@@ -299,6 +299,15 @@ func (c *Context) applyGraph(plan *plans.Plan, config *configs.Config, opts *App
 			SourceType: ValueFromPlan,
 		}
 	}
+	// Apply-time variables need to be merged in too.
+	// FIXME: We should check that all of these match declared variables and
+	// that all of them are declared as ephemeral, because all non-ephemeral
+	// variables are supposed to come exclusively from plan.VariableValues.
+	if opts != nil {
+		for n, vv := range opts.SetVariables {
+			variables[n] = vv
+		}
+	}
 	if diags.HasErrors() {
 		return nil, walkApply, diags
 	}

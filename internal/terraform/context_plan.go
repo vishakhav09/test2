@@ -324,6 +324,7 @@ The -target option is not for routine use, and is provided only for exceptional 
 		if len(varMarks) > 0 {
 			plan.VariableMarks = varMarks
 		}
+		plan.ApplyTimeVariables = applyTimeVariables
 		plan.TargetAddrs = opts.Targets
 	} else if !diags.HasErrors() {
 		panic("nil plan but no errors")
