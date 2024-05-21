@@ -158,8 +158,12 @@ func parseResourceInstanceUnderModule(moduleAddr ModuleInstance, remain hcl.Trav
 	var diags tfdiags.Diagnostics
 
 	mode := ManagedResourceMode
-	if remain.RootName() == "data" {
+	switch remain.RootName() {
+	case "data":
 		mode = DataResourceMode
+		remain = remain[1:]
+	case "ephemeral":
+		mode = EphemeralResourceMode
 		remain = remain[1:]
 	}
 
@@ -193,6 +197,13 @@ func parseResourceInstanceUnderModule(moduleAddr ModuleInstance, remain hcl.Trav
 				Severity: hcl.DiagError,
 				Summary:  "Invalid address",
 				Detail:   "A data source name is required.",
+				Subject:  remain[0].SourceRange().Ptr(),
+			})
+		case EphemeralResourceMode:
+			diags = diags.Append(&hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Invalid address",
+				Detail:   "An ephemeral resource type name is required.",
 				Subject:  remain[0].SourceRange().Ptr(),
 			})
 		default:

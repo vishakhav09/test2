@@ -72,15 +72,21 @@ func (c *ApplyCommand) Run(rawArgs []string) int {
 	}
 
 	// Check for invalid combination of plan file and variable overrides
-	if planFile != nil && !args.Vars.Empty() {
-		diags = diags.Append(tfdiags.Sourceless(
-			tfdiags.Error,
-			"Can't set variables when applying a saved plan",
-			"The -var and -var-file options cannot be used when applying a saved plan file, because a saved plan includes the variable values that were set when it was created.",
-		))
-		view.Diagnostics(diags)
-		return 1
-	}
+	// TEMP: This is disabled for the ephemeral values prototype because it
+	// becomes the local backend's responsibility to decide what to allow
+	// to be set, so that we can accept values for any ephemeral values that
+	// were set during planning and thus must be set again during apply.
+	/*
+		if planFile != nil && !args.Vars.Empty() {
+			diags = diags.Append(tfdiags.Sourceless(
+				tfdiags.Error,
+				"Can't set variables when applying a saved plan",
+				"The -var and -var-file options cannot be used when applying a saved plan file, because a saved plan includes the variable values that were set when it was created.",
+			))
+			view.Diagnostics(diags)
+			return 1
+		}
+	*/
 
 	// FIXME: the -input flag value is needed to initialize the backend and the
 	// operation, but there is no clear path to pass this value down, so we

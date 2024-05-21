@@ -900,28 +900,31 @@ func TestApply_planWithVarFile(t *testing.T) {
 }
 
 func TestApply_planVars(t *testing.T) {
-	planPath := applyFixturePlanFile(t)
-	statePath := testTempFile(t)
+	t.Skip("disabled because the ephemeral values prototype needs to be able to set ephemeral input variables during apply")
+	/*
+		planPath := applyFixturePlanFile(t)
+		statePath := testTempFile(t)
 
-	p := applyFixtureProvider()
-	view, done := testView(t)
-	c := &ApplyCommand{
-		Meta: Meta{
-			testingOverrides: metaOverridesForProvider(p),
-			View:             view,
-		},
-	}
+		p := applyFixtureProvider()
+		view, done := testView(t)
+		c := &ApplyCommand{
+			Meta: Meta{
+				testingOverrides: metaOverridesForProvider(p),
+				View:             view,
+			},
+		}
 
-	args := []string{
-		"-state", statePath,
-		"-var", "foo=bar",
-		planPath,
-	}
-	code := c.Run(args)
-	output := done(t)
-	if code == 0 {
-		t.Fatal("should've failed: ", output.Stdout())
-	}
+		args := []string{
+			"-state", statePath,
+			"-var", "foo=bar",
+			planPath,
+		}
+		code := c.Run(args)
+		output := done(t)
+		if code == 0 {
+			t.Fatal("should've failed: ", output.Stdout())
+		}
+	*/
 }
 
 // we should be able to apply a plan file with no other file dependencies
